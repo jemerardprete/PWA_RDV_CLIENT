@@ -6,9 +6,8 @@ import {
     db,
     createRdv
 } from "../../firebase";
-import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import { useNavigate } from "react-router-dom";
-import { collection } from "firebase/firestore";
+import { collection, where, query } from "firebase/firestore";
 import { Button, Card, Row, Col, Modal, Form } from 'react-bootstrap/';
 import { BsFileEarmarkPersonFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
@@ -32,14 +31,17 @@ function Rdv() {
     const [tag, setTag] = useState(<p>En cours de chargement</p>);
     const [lieu] = useState("");
     const [date, setDate] = useState("");
+    const [heure, setHeure] = useState("");
     const [currentPrestataireNom, setCurrentPrestataireNom] = useState("");
     const [currentPrestataireId, setCurrentPrestataireId] = useState("");
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const [rdv, loadingRdv, errorRdv] = useCollectionData(query(collection(db, 'rdv'), where('idPrestataire', '==', currentPrestataireId), where('date', '==', date)));
+
     const handleClick = () => {
-        createRdv(date, currentPrestataireId, lieu);
+        createRdv(date, heure, currentPrestataireId, lieu);
     };
 
     useEffect(() => {
@@ -48,10 +50,15 @@ function Rdv() {
             value.forEach((presta, index) => {
                 arrayPrestaParagraphe.push(setPrestaCard(presta, index));
             })
-
             setTag(arrayPrestaParagraphe);
         }
     }, [value, loading, error]);
+
+    useEffect(() => {
+        if (rdv) {
+            console.log(rdv);
+        }
+    }, [rdv, loadingRdv, errorRdv])
 
     function setPrestaCard(presta, index) {
         return (
@@ -85,6 +92,16 @@ function Rdv() {
                             <Form.Label>Date RDV</Form.Label>
                             <Form.Control type="date" value={date} onChange={(event) => setDate(event.target.value)} />
                         </Form.Group>
+                        <Form.Select className="mt-4" onChange={(event) => setHeure(event.target.value)}>
+                            <option>9h</option>
+                            <option>10h</option>
+                            <option>11h</option>
+                            <option>12h</option>
+                            <option>14h</option>
+                            <option>15h</option>
+                            <option>16h</option>
+                            <option>17h</option>
+                        </Form.Select>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

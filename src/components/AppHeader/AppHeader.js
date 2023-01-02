@@ -14,7 +14,7 @@ const AppHeader = () => {
         <nav>
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand href="/rdv">RDV APP</Navbar.Brand>
+                    <Navbar.Brand href="/">RDV APP</Navbar.Brand>
                     {user
                         ?
                         <Navbar.Collapse className="justify-content-end" id="navbarScroll">

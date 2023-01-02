@@ -47,14 +47,15 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const createRdv = async (date, idPrestataire, lieu) => {
+const createRdv = async (date, heure, idPrestataire, lieu) => {
     try {
         const user = auth.currentUser
         await addDoc(collection(db, "rdv"), {
             date: date,
+            heure: heure,
             idClient: user.uid,
             idPrestataire: idPrestataire,
-            lieu: lieu
+            lieu: lieu,
         });
     } catch (err) {
         console.error(err);
